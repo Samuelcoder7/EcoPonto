@@ -1,0 +1,86 @@
+<!-- =====================================================================================
+  PÁGINA HOME - TEMPLATE PRINCIPAL
+  =====================================================================================
+  Estrutura visual da página inicial com atalhos, cards informativos e ações rápidas.
+  ===================================================================================== -->
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button class="icon-chip" fill="clear">
+        <ion-icon name="leaf-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      App do Suliano
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="icon-chip" fill="clear" routerLink="/painel">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-content home-page">
+  <section class="hero">
+    <div class="hero-text">
+      <h1>{{ mensagemBoasVindas }}</h1>
+      <p>{{ usuarioLogado ? 'Continue fazendo a diferença.' : 'Faça login para acompanhar seu impacto.' }}</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">156.5</div>
+        <div class="stat-label">kg reciclados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">28</div>
+        <div class="stat-label">visitas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">12</div>
+        <div class="stat-label">árvores</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-body">
+    <div class="quick-actions">
+      <ion-button class="action-card" fill="clear" (click)="navegarParaColeta()">
+        <ion-icon name="navigate-outline"></ion-icon>
+        <span>Encontrar Ecoponto</span>
+      </ion-button>
+      <ion-button class="action-card light" fill="clear" (click)="navegarParaRanking()">
+        <ion-icon name="book-outline"></ion-icon>
+        <span>Guia de Reciclagem</span>
+      </ion-button>
+    </div>
+
+    <div class="section-head">
+      <h2>Ecopontos próximos</h2>
+      <ion-button class="link-button" fill="clear" size="small" (click)="navegarParaColeta()">
+        Ver todos
+      </ion-button>
+    </div>
+
+    <div class="ecoponto-list">
+      <div class="ecoponto-card" *ngFor="let ponto of pontos | slice:0:3">
+        <div class="ecoponto-thumb"></div>
+        <div class="ecoponto-info">
+          <h3>{{ ponto.nome }}</h3>
+          <div class="ecoponto-meta">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ ponto.bairro }}</span>
+          </div>
+          <div class="ecoponto-tags">
+            <ion-badge [color]="ponto.tipo === 'reciclavel' ? 'success' : 'medium'">
+              {{ ponto.tipo === 'reciclavel' ? 'Reciclável' : 'Lixo' }}
+            </ion-badge>
+            <ion-badge color="light">+2</ion-badge>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</ion-content>
