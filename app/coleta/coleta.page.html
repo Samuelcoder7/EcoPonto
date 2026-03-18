@@ -1,0 +1,99 @@
+<!-- =====================================================================================
+  PÁGINA COLETA - TEMPLATE DE MAPA E REGISTRO
+  =====================================================================================
+  Interface para localizar ecopontos, aplicar filtros e registrar descarte com evidência.
+  ===================================================================================== -->
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button fill="clear" routerLink="/home" routerDirection="back">
+        <ion-icon name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+      <ion-button fill="clear">
+        <ion-icon name="map-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Pontos de Coleta</ion-title>
+    <ion-searchbar slot="end" placeholder="Buscar ecopontos..." class="search-input"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" routerLink="/sobre">
+        <ion-icon name="information-circle-outline"></ion-icon>
+      </ion-button>
+      <ion-button class="filter-button" fill="clear">
+        <ion-icon name="options-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="page-content coleta-page">
+
+  <div class="map-panel">
+    <div class="map-wrapper" *ngIf="isNative && !mensagemMapa; else mapaWeb">
+      <div #map class="map"></div>
+    </div>
+    <ng-template #mapaWeb>
+      <div class="map-placeholder">
+        <ion-icon name="map-outline" size="large" color="medium"></ion-icon>
+        <strong>{{ mensagemMapa ? 'Falha ao carregar o mapa' : 'Mapa disponível no app instalado' }}</strong>
+        <span>{{ mensagemMapa || 'Abra este app no celular para ver o mapa.' }}</span>
+      </div>
+    </ng-template>
+    <ion-fab vertical="bottom" horizontal="end" class="map-fab">
+      <ion-fab-button class="map-fab-button" (click)="registrarDescarte()">
+        <ion-icon name="navigate-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+
+  <div class="list-header">
+    <h3>{{ pontos.length }} ecopontos encontrados</h3>
+  </div>
+
+  <div class="ecoponto-list">
+    <div class="ecoponto-card skeleton-card" *ngIf="carregando">
+      <div class="ecoponto-info">
+        <div class="ecoponto-top">
+          <ion-skeleton-text animated style="width: 60%; height: 20px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 40px; height: 20px; border-radius: 10px;"></ion-skeleton-text>
+        </div>
+        <ion-skeleton-text animated style="width: 80%; height: 16px; margin: 8px 0;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 50%; height: 14px; margin-bottom: 12px;"></ion-skeleton-text>
+        <div class="ecoponto-tags">
+          <ion-skeleton-text animated style="width: 50px; height: 24px; border-radius: 8px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 60px; height: 24px; border-radius: 8px;"></ion-skeleton-text>
+        </div>
+      </div>
+    </div>
+    <div class="ecoponto-card" *ngFor="let ponto of pontos" (click)="selecionarPonto(ponto)">
+      <div class="ecoponto-info">
+        <div class="ecoponto-top">
+          <h4>{{ ponto.nome }}</h4>
+          <div class="card-actions">
+            <span class="rating-pill">{{ ponto.avaliacao || 4.8 }}</span>
+            <ion-icon name="chevron-forward" class="card-arrow"></ion-icon>
+          </div>
+        </div>
+        <p class="ecoponto-address">{{ ponto.endereco }}</p>
+        <div class="ecoponto-meta">
+          <ion-icon name="location-outline"></ion-icon>
+          <span>0.5 km de distância</span>
+        </div>
+        <div class="ecoponto-tags">
+          <ion-badge>Papel</ion-badge>
+          <ion-badge>Plástico</ion-badge>
+          <ion-badge>Metal</ion-badge>
+          <ion-badge>+2</ion-badge>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ion-alert
+    [isOpen]="mostrarAlerta"
+    [header]="tipoAlerta === 'success' ? 'Sucesso' : 'Atenção'"
+    [message]="mensagemAlerta"
+    [buttons]="alertButtons">
+  </ion-alert>
+</ion-content>

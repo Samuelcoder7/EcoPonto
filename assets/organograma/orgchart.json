@@ -1,0 +1,85 @@
+{
+  "nodes": [
+    {
+      "id": "n1",
+      "label": "Prosafe",
+      "x": 264.0,
+      "y": 310.0,
+      "w": 227.0,
+      "h": 45.0,
+      "parentId": null
+    },
+    {
+      "id": "n2",
+      "label": "ONSHORE ORGANISATIONAL CHART\nRev. 30 ~ 12/Mar/26",
+      "x": 2455.0,
+      "y": 319.0,
+      "w": 421.0,
+      "h": 41.0,
+      "parentId": null
+    },
+    {
+      "id": "n3",
+      "label": "I\n1 DPA LINE OF Chief Executive\nOfficer\n| Tocco (Reese McNeel)\n|\n|\n|\n| Chief Operating Chiet\n| Information Officer Officer\n(Claudio Pereira)\n| (Eirik Fjelde) (Halvdan Kielland)",
+      "x": 1247.0,
+      "y": 718.0,
+      "w": 2390.0,
+      "h": 181.0,
+      "parentId": null
+    },
+    {
+      "id": "n4",
+      "label": "Chief Financial",
+      "x": 3541.0,
+      "y": 854.0,
+      "w": 85.0,
+      "h": 9.0,
+      "parentId": "n3"
+    },
+    {
+      "id": "n5",
+      "label": "Operations & Lead ERP Business\nManager HSSE Quality Assurance Country Manager Marketing & Hi\nManager ‘Supply Chain Communications\n[SNot] ‘Manager (Trine Aakermoen) (Rodrigo Furtado)\n(Adriano Horta) (Natalia Lopes) (Rodrigo Hs anager\n(Line Bliksmark)\nCrewing Manager\nICT Engineer (Bruno Ramos)\nQuality Analyst (Felype Aires) Talent Acquisition\nHSE Advisor HSE Advisor HSE Advisor (Amanda Eiras) Vessel Manager Vessel Manager Material Coordinator Speci specialist\n[SNot] [SNot] [SZeph] [SEur] Marine Manager [SZeph] [SEur] (rec) Coordinator (Stephani Neves)\nMoreira) 19\n(Jodo Vieira) (Thiago Oliveira) (Suellen $a) (Fernando Guimaraes) (Grunno Ferreira) Intern Crewing Coordinator (Livia Vianna)\n(Laura Andrade) (Caio Sgarbi)\nApprentice Crewing Analyst HR Analyst\nApprentice (Ana Barbosa)\nBuyer (Thais Gomes) (Marcelle Almeida) (Monica Castro)\n(Laura Castro) HSE Analyst Training Analyst\n(Flavio Rodrigues)\n(Ana Silva) Crewing Coordinator (Gabrielle Sousa)\nOPERATIONS (Caroline Trigoli)\nCrewing Analyst Benefits & Payroll\nMaterial Assistant (SISPAT)\nAnalyst\n(Emily Gomes) (Alessandra Silva\n(Josemar Bizerra)\nBuyer Dos Santos)\n(Marcio Mofacto) Crewing Coordinator\n(Hugo Spinola)\nprentice\n(Lucimayquele Intern\nFernandes) (Amanda Mello)\nBuyer HR & CREWING\n(Pedro Almeida)\nApprentic\nProject Technical Technical Technical Technical Technical (Maria Clara)\nSuperintendent\nPelee J mained Superintendent Superintendent t ot ‘Superintendent Superintendent\n(Marco Junqueira) [SZep] cz [SNot} [SEur] SE [SCal]\n(Odirlei Badaro) Buyer\n(Nathan Cruz) (Mateus Espurio) (Cristiano Rody) (Thomas Lund)\n(Richard Diego dos\nSantos) Apprentice Apprentic\n(TBC) (Giovanna De Souza) ctor & General Group Finance Accounting and\nManager Singapore Director Controlling Director\nPlanning Specialist Intern (Daphane Chang) (Bard Haugan) (Kjersti Stenberg)\n(Marcelo Queiroz de (Hugo Araujo)\nFranca)",
+      "x": 192.0,
+      "y": 995.0,
+      "w": 4527.0,
+      "h": 601.0,
+      "parentId": "n3"
+    },
+    {
+      "id": "n6",
+      "label": "TECHNICAL",
+      "x": 776.0,
+      "y": 1622.0,
+      "w": 71.0,
+      "h": 10.0,
+      "parentId": "n5"
+    },
+    {
+      "id": "n7",
+      "label": "Senior Group\nFinance Manager ‘Accounting Manager Financial Controller\n(Nathalia Costa) jilmar Muchao) (Yennie Feng) jp etem yf ee\n‘secondment\nVacancy\nFinancial Analyst Accounting ‘Accounting Senior Financial\nancial Analyst ( Financial Controller (Henri \\cial Controller Specialist\n(Diogo Azevedo) 2 (Gabriel Miranda Paz) Santana) specialist (Andreza dos Analyst\nAlexandria) (Susan Costa) iego Sousa)\nSanto’ tos)",
+      "x": 3032.0,
+      "y": 1668.0,
+      "w": 1648.0,
+      "h": 147.0,
+      "parentId": "n5"
+    },
+    {
+      "id": "n8",
+      "label": "Intern\n(Rhuan Santos)",
+      "x": 3332.0,
+      "y": 1883.0,
+      "w": 89.0,
+      "h": 26.0,
+      "parentId": "n7"
+    },
+    {
+      "id": "n9",
+      "label": "Rev 30.0 [12-Mar-26] Doc No. 00-MAN-002-0102",
+      "x": 102.0,
+      "y": 3464.0,
+      "w": 2582.0,
+      "h": 31.0,
+      "parentId": "n5"
+    }
+  ]
+}

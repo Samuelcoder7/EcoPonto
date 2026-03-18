@@ -1,0 +1,292 @@
+// Coleta page styles - Professional and Stylized
+// =====================================================================================
+// ESTILOS DE COLETA - MAPA, FILTROS E AÇÕES DE DESCARTE
+// =====================================================================================
+
+.skeleton-card {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.coleta-page {
+  --background: linear-gradient(135deg, #f6faf7 0%, #eef6f1 60%, #eaf3ef 100%);
+  color: var(--app-text);
+}
+
+/* Professional green header with gradient */
+ion-toolbar {
+  --background: linear-gradient(135deg, #0f9d58 0%, #0b8c4d 100%);
+  --color: #ffffff;
+  --border-color: transparent;
+}
+
+ion-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+.search-input {
+  --background: rgba(255, 255, 255, 0.9);
+  --color: var(--app-text);
+  --border-radius: 20px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --placeholder-color: var(--app-muted);
+  padding: 0 12px;
+  width: 100%;
+  margin: 0 8px;
+}
+
+/* apply to inner input for all platforms */
+.search-input::part(native) {
+  color: var(--app-text);
+  background: transparent;
+}
+.search-input::part(native)::-webkit-input-placeholder,
+.search-input::part(native)::-moz-placeholder,
+.search-input::part(native)::-ms-input-placeholder {
+  color: var(--app-muted);
+  opacity: 1;
+}
+
+.search-input input {
+  color: var(--app-text) !important;
+}
+.search-input input::placeholder {
+  color: var(--app-muted) !important;
+}
+
+.filter-button {
+  --border-radius: 50%;
+  --background: rgba(255, 255, 255, 0.2);
+  --color: #ffffff;
+  width: 44px;
+  height: 44px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.map-panel {
+  position: relative;
+  margin: 16px 16px 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(15, 157, 88, 0.1);
+}
+
+.map {
+  width: 100%;
+  height: 260px;
+}
+
+.map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  height: 240px;
+  background: linear-gradient(135deg, #e7f7ee 0%, #f2fbf6 50%, #e7f7ee 100%);
+  color: var(--app-muted);
+  text-align: center;
+  padding: 24px;
+  position: relative;
+}
+
+.map-placeholder::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 20%, rgba(15, 157, 88, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.map-placeholder strong {
+  color: var(--app-text);
+  font-size: 1.1rem;
+}
+
+.map-fab-button {
+  --background: #0f9d58;
+  --color: #ffffff;
+  --box-shadow: 0 6px 16px rgba(15, 157, 88, 0.3);
+  position: relative;
+}
+
+.map-fab-button::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, rgba(15, 157, 88, 0.5) 0%, rgba(11, 140, 77, 0.5) 100%);
+  border-radius: 50%;
+  z-index: -1;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+}
+
+.list-header {
+  padding: 0 16px 12px;
+}
+
+.list-header h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--app-text);
+  font-weight: 600;
+}
+
+.ecoponto-list {
+  display: grid;
+  gap: 16px;
+  padding: 0 16px 32px;
+}
+
+.ecoponto-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(15, 157, 88, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ecoponto-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+.ecoponto-card:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.ecoponto-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-arrow {
+  color: #0f9d58;
+  font-size: 1.2rem;
+}
+
+.ecoponto-top h4 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--app-text);
+  flex: 1;
+}
+
+.rating-pill {
+  background: linear-gradient(135deg, #fff7d6 0%, #fef3c7 100%);
+  color: #8a6a00;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(138, 106, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(138, 106, 0, 0.1);
+}
+
+.ecoponto-address {
+  margin: 8px 0 12px;
+  font-size: 0.9rem;
+  color: var(--app-muted);
+  line-height: 1.4;
+}
+
+.ecoponto-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--app-muted);
+  margin-bottom: 12px;
+}
+
+.ecoponto-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ecoponto-tags ion-badge {
+  --background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  --color: #166534;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(22, 101, 52, 0.2);
+}
+
+.ecoponto-tags ion-badge:nth-child(2) {
+  --background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  --color: #1e40af;
+}
+
+.ecoponto-tags ion-badge:nth-child(3) {
+  --background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  --color: #92400e;
+}
+
+.ecoponto-tags ion-badge:nth-child(4) {
+  --background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  --color: #374151;
+}
+
+.ecoponto-card:nth-child(1) { animation-delay: 0.1s; }
+.ecoponto-card:nth-child(2) { animation-delay: 0.2s; }
+.ecoponto-card:nth-child(3) { animation-delay: 0.3s; }
+.ecoponto-card:nth-child(4) { animation-delay: 0.4s; }
+.ecoponto-card:nth-child(5) { animation-delay: 0.5s; }
+
+@media (min-width: 900px) {
+  .map {
+    height: 340px;
+  }
+}
