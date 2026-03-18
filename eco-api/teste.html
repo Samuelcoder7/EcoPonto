@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- Declaração do tipo de documento HTML5 -->
+<html>
+<head>
+<!-- Cabeçalho do documento HTML -->
+<meta charset="UTF-8">
+<!-- Define a codificação de caracteres como UTF-8 para suporte a caracteres especiais -->
+<title>Teste da API</title>
+<!-- Título da página que aparece na aba do navegador -->
+</head>
+
+<body>
+<!-- Corpo da página HTML onde o conteúdo visível é exibido -->
+
+<h1>Lista de Ecopontos</h1>
+<!-- Cabeçalho principal da página -->
+
+<div id="lista"></div>
+<!-- Div vazia onde a lista de ecopontos será inserida dinamicamente -->
+
+<script>
+// Bloco de script JavaScript para interagir com a API e atualizar a página
+
+// Faz uma requisição fetch para a API local na rota /ecopontos
+fetch("http://localhost:3000/ecopontos")
+.then(res => res.json()) // Converte a resposta para JSON
+.then(dados => { // Manipula os dados recebidos
+
+    // Seleciona o elemento HTML com id 'lista' para inserir o conteúdo
+    const lista = document.getElementById("lista")
+
+    // Itera sobre cada ponto de coleta nos dados
+    dados.forEach(ponto => {
+
+        // Adiciona HTML dinamicamente para cada ponto, incluindo nome, tipo de resíduo e endereço
+        lista.innerHTML += `
+        <p>
+        <strong>${ponto.nome}</strong><br>
+        Tipo: ${ponto.tipo_residuo}<br>
+        Endereço: ${ponto.endereco}
+        </p>
+        `
+
+    })
+
+})
+
+</script>
+
+</body>
+</html>
