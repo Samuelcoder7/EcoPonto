@@ -30,18 +30,20 @@
 <ion-content class="page-content coleta-page">
 
   <div class="map-panel">
-    <div class="map-wrapper" *ngIf="isNative && !mensagemMapa; else mapaWeb">
+    <div class="map-wrapper" *ngIf="useNativeMap && !mensagemMapa; else mapaWeb">
       <div #map class="map"></div>
     </div>
     <ng-template #mapaWeb>
-      <iframe
-        width="100%"
-        height="100%"
-        style="border:0; min-height: 250px;"
-        loading="lazy"
-        allowfullscreen
-        src="https://www.google.com/maps?q=-22.9068,-43.1729&z=13&output=embed">
-      </iframe>
+      <div class="map-wrapper">
+        <div #webMap class="map web-map" *ngIf="!mensagemMapa; else mapaErro"></div>
+        <div class="map-debug" *ngIf="debugInfo">{{ debugInfo }}</div>
+        <ng-template #mapaErro>
+          <div class="map-placeholder">
+            <strong>Mapa indisponível</strong>
+            <span>{{ mensagemMapa }}</span>
+          </div>
+        </ng-template>
+      </div>
     </ng-template>
     <ion-fab vertical="bottom" horizontal="end" class="map-fab">
       <ion-fab-button class="map-fab-button" (click)="registrarDescarte()">

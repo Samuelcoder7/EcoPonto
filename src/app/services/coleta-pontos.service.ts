@@ -58,28 +58,40 @@ export class ColetaPontosService {
       nome: 'Ecoponto Campo Grande',
       tipo: 'lixo',
       bairro: 'Campo Grande',
-      endereco: 'Avenida Maria Teresa, Campo Grande, Rio de Janeiro, RJ'
+      endereco: 'Avenida Maria Teresa, Campo Grande, Rio de Janeiro, RJ',
+      avaliacao: 4.8,
+      lat: -22.9051459,
+      lng: -43.5658115
     },
     {
       id: 'cg-02',
       nome: 'Ecoponto Campo Grande (Reciclavel)',
       tipo: 'reciclavel',
       bairro: 'Campo Grande',
-      endereco: 'Avenida Maria Teresa, Campo Grande, Rio de Janeiro, RJ'
+      endereco: 'Avenida Maria Teresa, Campo Grande, Rio de Janeiro, RJ',
+      avaliacao: 4.8,
+      lat: -22.9051459,
+      lng: -43.5658115
     },
     {
       id: 'bg-01',
       nome: 'Ecoponto Catiri',
       tipo: 'lixo',
       bairro: 'Bangu',
-      endereco: 'Catiri, Bangu, Rio de Janeiro, RJ'
+      endereco: 'Catiri, Bangu, Rio de Janeiro, RJ',
+      avaliacao: 4.8,
+      lat: -22.853089,
+      lng: -43.468768
     },
     {
       id: 'bg-03',
       nome: 'Ecoponto Reciclavel Bangu Shopping',
       tipo: 'reciclavel',
       bairro: 'Bangu',
-      endereco: 'Rua Fonseca, 240 - Bangu, Rio de Janeiro - RJ'
+      endereco: 'Rua Fonseca, 240 - Bangu, Rio de Janeiro - RJ',
+      avaliacao: 4.8,
+      lat: -22.862822,
+      lng: -43.49097
     }
   ];
 

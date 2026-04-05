@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protótipo Interativo — App do Suliano</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: #111827;
+    color: #0f172a;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px 48px;
+    gap: 24px;
+  }
+
+  .header { text-align: center; }
+  .header h1 { color: #fff; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+  .header p  { color: #64748b; font-size: 0.78rem; margin-top: 4px; }
+
+  .main-layout {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ── Mapa lateral ── */
+  .nav-map {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 20px 16px;
+    width: 200px;
+    flex-shrink: 0;
+    border: 1px solid #334155;
+  }
+
+  .nav-map h3 {
+    color: #94a3b8;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px; cursor: pointer;
+    transition: all 0.2s; margin-bottom: 4px;
+    border: 1.5px solid transparent;
+    color: #94a3b8; font-size: 0.75rem; font-weight: 600;
+    user-select: none;
+  }
+
+  .nav-item:hover { background: #334155; color: #e2e8f0; }
+  .nav-item.active { background: rgba(15,157,88,0.15); border-color: #0f9d58; color: #22c55e; }
+  .nav-item .dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; flex-shrink: 0; }
+  .nav-item.active .dot { background: #0f9d58; }
+
+  /* ── Celular ── */
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+  .phone {
+    width: 300px; height: 620px;
+    background: #fff; border-radius: 44px;
+    border: 6px solid #1e293b;
+    box-shadow: 0 0 0 2px #334155, 0 40px 80px rgba(0,0,0,0.6);
+    overflow: hidden; display: flex; flex-direction: column; position: relative;
+  }
+
+  .phone::before {
+    content: '';
+    position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 90px; height: 26px;
+    background: #1e293b;
+    border-radius: 0 0 18px 18px;
+    z-index: 200;
+  }
+
+  .screen-dots { display: flex; gap: 6px; justify-content: center; }
+  .sdot { width: 7px; height: 7px; border-radius: 50%; background: #334155; cursor: pointer; transition: all 0.2s; }
+  .sdot.active { background: #0f9d58; width: 20px; border-radius: 4px; }
+
+  /* ── Paleta ── */
+  :root {
+    --green: #0f9d58;
+    --green-dark: #0b8c4d;
+    --green-light: #e9f7ee;
+    --bg: linear-gradient(180deg, #f6faf7 0%, #eef6f1 60%, #eaf3ef 100%);
+    --text: #0b1f14;
+    --muted: #557062;
+    --surface: #ffffff;
+    --border: #e0ebe5;
+    --radius: 16px;
+  }
+
+  .screen { display: none; flex-direction: column; height: 100%; }
+  .screen.active { display: flex; }
+
+  /* ── Toolbar ── */
+  .toolbar {
+    background: rgba(255,255,255,0.95);
+    padding: 34px 14px 10px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid rgba(148,163,184,0.15);
+    flex-shrink: 0;
+  }
+
+  .toolbar.green { background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%); }
+  .toolbar-title { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+  .toolbar.green .toolbar-title { color: #fff; }
+
+  .icon-btn {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: rgba(15,23,42,0.06);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; cursor: pointer; border: none; transition: background 0.15s;
+  }
+
+  .icon-btn:hover { background: rgba(15,23,42,0.12); }
+  .toolbar.green .icon-btn { background: rgba(255,255,255,0.2); color: #fff; }
+  .toolbar.green .icon-btn:hover { background: rgba(255,255,255,0.3); }
+  .toolbar-left, .toolbar-right { display: flex; gap: 6px; align-items: center; }
+
+  .screen-content { flex: 1; overflow-y: auto; background: var(--bg); scrollbar-width: none; }
+  .screen-content::-webkit-scrollbar { display: none; }
+
+  /* ── Hero verde ── */
+  .hero-green {
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+    color: #fff; padding: 22px 18px 28px;
+    border-radius: 0 0 26px 26px;
+    box-shadow: 0 14px 30px rgba(7,44,26,0.28);
+    position: relative; overflow: hidden;
+  }
+
+  .hero-green::before {
+    content: ''; position: absolute; top: -60%; right: -60%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-green h1 { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .hero-green p  { font-size: 0.68rem; opacity: 0.85; margin-bottom: 14px; }
+  .hero-icon { font-size: 1.8rem; margin-bottom: 8px; display: block; }
+
+  .stats-row { display: flex; gap: 7px; }
+  .stat-pill { flex: 1; background: rgba(255,255,255,0.18); border-radius: 10px; padding: 7px 4px; text-align: center; }
+  .stat-pill .val { display: block; font-size: 0.85rem; font-weight: 800; color: #fff; }
+  .stat-pill .lbl { display: block; font-size: 0.54rem; color: rgba(255,255,255,0.75); margin-top: 1px; }
+
+  .body-section { padding: 14px; }
+
+  .quick-actions { display: flex; gap: 8px; margin-bottom: 18px; }
+
+  .action-btn {
+    flex: 1; background: var(--green); color: #fff; border: none;
+    border-radius: 12px; padding: 12px 8px;
+    font-family: 'Sora', sans-serif; font-size: 0.65rem; font-weight: 700;
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    cursor: pointer; box-shadow: 0 5px 14px rgba(15,157,88,0.28);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .action-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15,157,88,0.38); }
+  .action-btn:active { transform: translateY(0); }
+
+  .action-btn.light {
+    background: #fff; color: var(--green);
+    border: 1.5px solid var(--border);
+    box-shadow: 0 4px 12px rgba(15,23,42,0.08);
+  }
+
+  .action-btn .icon { font-size: 1.1rem; }
+
+  .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .section-head h2 { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+  .link-text { font-size: 0.65rem; color: var(--green); font-weight: 600; cursor: pointer; }
+  .link-text:hover { text-decoration: underline; }
+
+  .eco-card {
+    background: var(--surface); border-radius: var(--radius); padding: 11px; margin-bottom: 8px;
+    box-shadow: 0 4px 14px rgba(15,23,42,0.08);
+    display: flex; gap: 10px; align-items: flex-start;
+    cursor: pointer; transition: transform 0.15s;
+  }
+
+  .eco-card:hover { transform: translateY(-1px); }
+
+  .eco-thumb {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--green-light); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+
+  .eco-name { font-size: 0.74rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .eco-meta { font-size: 0.6rem; color: var(--muted); margin-bottom: 5px; }
+  .tags { display: flex; gap: 4px; flex-wrap: wrap; }
+
+  .tag { font-size: 0.52rem; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: var(--green-light); color: var(--green); }
+  .tag.gray { background: #f1f5f9; color: #64748b; }
+
+  /* ── Auth ── */
+  .form-card {
+    background: var(--surface); border-radius: 20px;
+    margin: 0 14px 14px; padding: 18px 14px;
+    box-shadow: 0 6px 18px rgba(15,23,42,0.09);
+  }
+
+  .form-card h2 { font-size: 0.95rem; font-weight: 800; margin-bottom: 3px; color: var(--text); }
+  .form-card > p { font-size: 0.62rem; color: var(--muted); margin-bottom: 14px; }
+  .field { margin-bottom: 9px; }
+  .field label { display: block; font-size: 0.6rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+
+  .field-input {
+    width: 100%; height: 34px;
+    border: 1.5px solid var(--border); border-radius: 9px;
+    background: #f8faf9; padding: 0 11px;
+    font-size: 0.68rem; font-family: 'Sora', sans-serif; color: var(--text);
+    outline: none; transition: border-color 0.2s;
+  }
+
+  .field-input:focus { border-color: var(--green); background: #fff; }
+
+  .btn-primary {
+    width: 100%; background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+    color: #fff; border: none; border-radius: 11px; padding: 11px;
+    font-family: 'Sora', sans-serif; font-size: 0.78rem; font-weight: 700;
+    cursor: pointer; box-shadow: 0 5px 14px rgba(15,157,88,0.28);
+    margin-bottom: 7px; transition: transform 0.15s;
+  }
+
+  .btn-primary:hover { transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-outline {
+    width: 100%; background: transparent; color: var(--green);
+    border: 1.5px solid var(--border); border-radius: 11px; padding: 10px;
+    font-family: 'Sora', sans-serif; font-size: 0.75rem; font-weight: 600;
+    cursor: pointer; margin-bottom: 6px; transition: background 0.15s;
+  }
+
+  .btn-outline:hover { background: var(--green-light); }
+
+  .btn-ghost {
+    width: 100%; background: transparent; color: var(--muted); border: none;
+    border-radius: 11px; padding: 9px;
+    font-family: 'Sora', sans-serif; font-size: 0.72rem; font-weight: 500; cursor: pointer;
+  }
+
+  .muted-text { font-size: 0.6rem; color: var(--muted); text-align: center; margin: 5px 0 10px; }
+
+  /* ── Mapa ── */
+  .map-box {
+    height: 160px;
+    background: linear-gradient(135deg, #d4edda 0%, #b7dfca 100%);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 5px; position: relative;
+  }
+
+  .map-box .map-pin { font-size: 1.5rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+  .map-box .map-label { font-size: 0.62rem; color: #2d6a4f; font-weight: 600; }
+
+  .map-fab {
+    position: absolute; bottom: 10px; right: 10px;
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; box-shadow: 0 5px 14px rgba(15,157,88,0.5);
+    cursor: pointer; border: none; transition: transform 0.15s;
+  }
+
+  .map-fab:hover { transform: scale(1.1); }
+
+  /* ── Ranking ── */
+  .rank-card {
+    background: var(--surface); border-radius: var(--radius); padding: 12px;
+    margin-bottom: 9px; box-shadow: 0 4px 14px rgba(15,23,42,0.08);
+  }
+
+  .rank-card-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 9px; }
+  .rank-card-head h2 { font-size: 0.78rem; font-weight: 700; color: var(--text); }
+  .rank-card-head span { font-size: 0.58rem; color: var(--muted); }
+
+  .rank-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); }
+  .rank-item:last-child { border-bottom: none; }
+  .rank-item h3 { font-size: 0.7rem; font-weight: 700; color: var(--text); }
+  .rank-item p  { font-size: 0.58rem; color: var(--muted); }
+
+  .badge { font-size: 0.58rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; background: var(--green); color: #fff; }
+  .badge.gray { background: #e2e8f0; color: #64748b; }
+
+  .validate-btn {
+    font-size: 0.58rem; font-weight: 700; padding: 4px 9px;
+    border-radius: 7px; background: var(--green-light); color: var(--green);
+    border: none; cursor: pointer;
+  }
+
+  /* ── Painel ── */
+  .hero-pills { display: flex; gap: 7px; margin-top: 12px; }
+  .hero-pill { flex: 1; background: rgba(255,255,255,0.18); border-radius: 10px; padding: 7px 5px; text-align: center; }
+  .hero-pill .pv { display: block; font-size: 0.95rem; font-weight: 800; color: #fff; }
+  .hero-pill .pl { display: block; font-size: 0.52rem; color: rgba(255,255,255,0.75); margin-top: 1px; }
+
+  .perfil-stats { display: flex; gap: 16px; margin-top: 12px; }
+  .perfil-stat .sv { display: block; font-size: 1rem; font-weight: 800; color: #fff; }
+  .perfil-stat .sl { display: block; font-size: 0.58rem; color: rgba(255,255,255,0.75); }
+
+  .impact-grid { display: flex; gap: 8px; margin-bottom: 10px; }
+  .impact-card { flex: 1; background: var(--surface); border-radius: var(--radius); padding: 11px; box-shadow: 0 4px 14px rgba(15,23,42,0.08); display: flex; flex-direction: column; gap: 5px; }
+  .impact-card .i-icon { font-size: 1.2rem; }
+  .impact-card h3 { font-size: 0.82rem; font-weight: 800; color: var(--text); }
+  .impact-card p  { font-size: 0.58rem; color: var(--muted); }
+
+  .chart-card { background: var(--surface); border-radius: var(--radius); padding: 12px; margin-bottom: 10px; box-shadow: 0 4px 14px rgba(15,23,42,0.08); }
+  .chart-card-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .chart-card-head h2 { font-size: 0.78rem; font-weight: 700; color: var(--text); }
+  .bars { display: flex; gap: 4px; align-items: flex-end; height: 52px; }
+  .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; height: 100%; justify-content: flex-end; }
+  .bar-fill { width: 100%; background: linear-gradient(180deg, var(--green) 0%, var(--green-dark) 100%); border-radius: 3px 3px 0 0; }
+  .bar-label { font-size: 0.48rem; color: var(--muted); font-weight: 600; }
+
+  .panel-actions { display: flex; flex-direction: column; gap: 7px; }
+
+  .btn-dark-outline {
+    width: 100%; background: transparent; color: #0f172a;
+    border: 1.5px solid #e2e8f0; border-radius: 11px; padding: 10px;
+    font-family: 'Sora', sans-serif; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn-dark-outline:hover { background: #f8fafc; }
+
+  /* ── Paleta rodapé ── */
+  .palette { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .palette-item { display: flex; align-items: center; gap: 7px; color: #64748b; font-size: 0.7rem; }
+  .palette-dot { width: 14px; height: 14px; border-radius: 50%; }
+
+  /* ── Toast de navegação ── */
+  .transition-hint {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: rgba(15,157,88,0.92); color: #fff; padding: 8px 18px;
+    border-radius: 20px; font-size: 0.72rem; font-weight: 600;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 999;
+  }
+  .transition-hint.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Protótipo Interativo — App do Suliano</h1>
+  <p>Clique nos botões para navegar entre as telas</p>
+</div>
+
+<div class="main-layout">
+
+  <!-- Mapa de navegação -->
+  <div class="nav-map">
+    <h3>Telas</h3>
+    <div class="nav-item active" onclick="goTo('login')"   id="nav-login">   <div class="dot"></div> 🔑 Login</div>
+    <div class="nav-item"        onclick="goTo('cadastro')" id="nav-cadastro"><div class="dot"></div> 📝 Cadastro</div>
+    <div class="nav-item"        onclick="goTo('home')"    id="nav-home">    <div class="dot"></div> 🏠 Home</div>
+    <div class="nav-item"        onclick="goTo('coleta')"  id="nav-coleta">  <div class="dot"></div> 🗺️ Coleta</div>
+    <div class="nav-item"        onclick="goTo('ranking')" id="nav-ranking"> <div class="dot"></div> 🏆 Ranking</div>
+    <div class="nav-item"        onclick="goTo('painel')"  id="nav-painel">  <div class="dot"></div> 👤 Painel</div>
+  </div>
+
+  <!-- Celular -->
+  <div class="phone-wrap">
+    <div class="phone">
+
+      <!-- LOGIN -->
+      <div class="screen active" id="screen-login">
+        <div class="toolbar green">
+          <div class="toolbar-left"><div class="icon-btn">🔑</div></div>
+          <span class="toolbar-title">Login</span>
+          <div class="toolbar-right"><div class="icon-btn">👤</div></div>
+        </div>
+        <div class="screen-content">
+          <div class="hero-green">
+            <span class="hero-icon">🔑</span>
+            <h1>Bem-vindo</h1>
+            <p>Entre para continuar e acompanhar seu impacto.</p>
+          </div>
+          <div class="form-card" style="margin-top:14px">
+            <h2>Entrar</h2>
+            <p>Use seu e-mail e senha para continuar.</p>
+            <div class="field"><label>E-mail</label><input class="field-input" placeholder="seu@email.com"></div>
+            <div class="field"><label>Senha</label><input class="field-input" type="password" placeholder="••••••••"></div>
+            <p class="muted-text">Caso não tenha conta, crie uma em segundos.</p>
+            <button class="btn-primary"  onclick="goTo('home')">Entrar</button>
+            <button class="btn-outline"  onclick="goTo('cadastro')">Criar conta</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CADASTRO -->
+      <div class="screen" id="screen-cadastro">
+        <div class="toolbar green">
+          <div class="toolbar-left">
+            <button class="icon-btn" onclick="goTo('login')">←</button>
+            <div class="icon-btn">📝</div>
+          </div>
+          <span class="toolbar-title">Cadastro de Usuário</span>
+          <div class="toolbar-right"><div class="icon-btn">👤</div></div>
+        </div>
+        <div class="screen-content">
+          <div class="hero-green">
+            <span class="hero-icon">📝</span>
+            <h1>Criar conta</h1>
+            <p>Leva menos de um minuto para começar.</p>
+          </div>
+          <div class="form-card" style="margin-top:14px">
+            <h2>Seus dados</h2>
+            <p>Preencha suas informações básicas.</p>
+            <div class="field"><label>Nome completo</label><input class="field-input" placeholder="Digite seu nome completo"></div>
+            <div class="field"><label>Data de nascimento</label><input class="field-input" placeholder="MM/AAAA"></div>
+            <div class="field"><label>Telefone</label><input class="field-input" placeholder="(21) 99999-9999"></div>
+            <div class="field"><label>E-mail</label><input class="field-input" placeholder="seu@email.com"></div>
+            <div class="field"><label>Senha</label><input class="field-input" type="password" placeholder="Mínimo 6 caracteres"></div>
+            <div class="field"><label>Confirmação de senha</label><input class="field-input" type="password" placeholder="Repita a senha"></div>
+            <button class="btn-primary" style="margin-top:10px" onclick="goTo('home')">Criar conta</button>
+            <button class="btn-outline" onclick="goTo('login')">Já tenho conta</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOME -->
+      <div class="screen" id="screen-home">
+        <div class="toolbar">
+          <div class="toolbar-left"><div class="icon-btn">🌿</div></div>
+          <span class="toolbar-title">App do Suliano</span>
+          <div class="toolbar-right"><button class="icon-btn" onclick="goTo('painel')">👤</button></div>
+        </div>
+        <div class="screen-content">
+          <div class="hero-green">
+            <h1>Olá! 👋</h1>
+            <p>Continue fazendo a diferença.</p>
+            <div class="stats-row">
+              <div class="stat-pill"><span class="val">156.5</span><span class="lbl">kg reciclados</span></div>
+              <div class="stat-pill"><span class="val">28</span><span class="lbl">visitas</span></div>
+              <div class="stat-pill"><span class="val">12</span><span class="lbl">árvores</span></div>
+            </div>
+          </div>
+          <div class="body-section">
+            <div class="quick-actions">
+              <button class="action-btn"       onclick="goTo('coleta')"><span class="icon">📍</span>Encontrar Ecoponto</button>
+              <button class="action-btn light" onclick="goTo('ranking')"><span class="icon">📖</span>Guia de Reciclagem</button>
+            </div>
+            <div class="section-head">
+              <h2>Ecopontos próximos</h2>
+              <span class="link-text" onclick="goTo('coleta')">Ver todos</span>
+            </div>
+            <div class="eco-card" onclick="goTo('coleta')">
+              <div class="eco-thumb">♻️</div>
+              <div><div class="eco-name">Ecoponto Campo Grande</div><div class="eco-meta">📍 Campo Grande</div><div class="tags"><span class="tag">Reciclável</span><span class="tag gray">+2</span></div></div>
+            </div>
+            <div class="eco-card" onclick="goTo('coleta')">
+              <div class="eco-thumb">♻️</div>
+              <div><div class="eco-name">Ecoponto Bangu</div><div class="eco-meta">📍 Bangu</div><div class="tags"><span class="tag">Lixo</span><span class="tag gray">+1</span></div></div>
+            </div>
+            <div class="eco-card" onclick="goTo('coleta')">
+              <div class="eco-thumb">♻️</div>
+              <div><div class="eco-name">Ecoponto Deodoro</div><div class="eco-meta">📍 Deodoro</div><div class="tags"><span class="tag">Reciclável</span><span class="tag gray">+3</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLETA -->
+      <div class="screen" id="screen-coleta">
+        <div class="toolbar green">
+          <div class="toolbar-left">
+            <button class="icon-btn" onclick="goTo('home')">←</button>
+            <div class="icon-btn">🗺️</div>
+          </div>
+          <span class="toolbar-title">Pontos de Coleta</span>
+          <div class="toolbar-right"><div class="icon-btn">⚙️</div></div>
+        </div>
+        <div class="screen-content">
+          <div class="map-box">
+            <span class="map-pin">📍</span>
+            <span class="map-label">Google Maps</span>
+            <button class="map-fab" title="Registrar descarte">🎯</button>
+          </div>
+          <div class="body-section" style="padding-top:10px">
+            <div class="section-head" style="margin-bottom:10px"><h2>4 ecopontos encontrados</h2></div>
+            <div class="eco-card">
+              <div class="eco-thumb">♻️</div>
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+                  <div class="eco-name">Ecoponto Campo Grande</div>
+                  <span style="font-size:0.58rem;font-weight:700;color:var(--green);background:#e9f7ee;padding:2px 6px;border-radius:20px">4.8 ⭐</span>
+                </div>
+                <div class="eco-meta">Rua das Flores, 123 · 0.5 km</div>
+                <div class="tags"><span class="tag gray">Papel</span><span class="tag gray">Plástico</span><span class="tag gray">Metal</span><span class="tag gray">+2</span></div>
+              </div>
+            </div>
+            <div class="eco-card">
+              <div class="eco-thumb">♻️</div>
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+                  <div class="eco-name">Ecoponto Bangu</div>
+                  <span style="font-size:0.58rem;font-weight:700;color:var(--green);background:#e9f7ee;padding:2px 6px;border-radius:20px">4.5 ⭐</span>
+                </div>
+                <div class="eco-meta">Av. Brasil, 456 · 1.2 km</div>
+                <div class="tags"><span class="tag gray">Orgânico</span><span class="tag gray">Vidro</span><span class="tag gray">+1</span></div>
+              </div>
+            </div>
+            <div class="eco-card">
+              <div class="eco-thumb">♻️</div>
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+                  <div class="eco-name">Ecoponto Deodoro</div>
+                  <span style="font-size:0.58rem;font-weight:700;color:var(--green);background:#e9f7ee;padding:2px 6px;border-radius:20px">4.2 ⭐</span>
+                </div>
+                <div class="eco-meta">Rua Cel. Rocha, 88 · 2.1 km</div>
+                <div class="tags"><span class="tag gray">Papel</span><span class="tag gray">Metal</span><span class="tag gray">+3</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RANKING -->
+      <div class="screen" id="screen-ranking">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <button class="icon-btn" onclick="goTo('home')">←</button>
+            <div class="icon-btn">🏆</div>
+          </div>
+          <span class="toolbar-title">Ranking</span>
+          <div class="toolbar-right"><div class="icon-btn">👤</div></div>
+        </div>
+        <div class="screen-content">
+          <div class="hero-green">
+            <h1>Ranking de Ecopontos</h1>
+            <p>Veja os melhores colocados e suas contribuições.</p>
+            <div class="hero-pills">
+              <div class="hero-pill"><span class="pv">12</span><span class="pl">usuários ativos</span></div>
+              <div class="hero-pill"><span class="pv">3</span><span class="pl">pendentes</span></div>
+              <div class="hero-pill"><span class="pv">5</span><span class="pl">meus registros</span></div>
+            </div>
+          </div>
+          <div class="body-section">
+            <div class="rank-card">
+              <div class="rank-card-head"><h2>Top usuários</h2><span>esta semana</span></div>
+              <div class="rank-item"><div><h3>#1 joao@email.com</h3><p>320 pontos</p></div><span class="badge">320</span></div>
+              <div class="rank-item"><div><h3>#2 maria@email.com</h3><p>290 pontos</p></div><span class="badge">290</span></div>
+              <div class="rank-item"><div><h3>#3 pedro@email.com</h3><p>210 pontos</p></div><span class="badge">210</span></div>
+            </div>
+            <div class="rank-card">
+              <div class="rank-card-head"><h2>Registros pendentes</h2><span>validação</span></div>
+              <div class="rank-item"><div><h3>ana@email.com</h3><p>12/03/2026, 10:30</p></div><button class="validate-btn">Validar</button></div>
+              <div class="rank-item"><div><h3>lucas@email.com</h3><p>12/03/2026, 09:15</p></div><button class="validate-btn">Validar</button></div>
+            </div>
+            <div class="rank-card">
+              <div class="rank-card-head"><h2>Meus registros</h2><span>histórico</span></div>
+              <div class="rank-item"><div><h3>Validado</h3><p>11/03/2026, 14:00</p></div><span class="badge">OK</span></div>
+              <div class="rank-item"><div><h3>Pendente</h3><p>10/03/2026, 09:00</p></div><span class="badge gray">Aguardando</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAINEL -->
+      <div class="screen" id="screen-painel">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <button class="icon-btn" onclick="goTo('home')">←</button>
+            <div class="icon-btn">⊞</div>
+          </div>
+          <span class="toolbar-title">Painel</span>
+          <div class="toolbar-right"><div class="icon-btn">👤</div></div>
+        </div>
+        <div class="screen-content">
+          <div class="hero-green">
+            <h1>Meu Perfil</h1>
+            <p>Acompanhe seu impacto ambiental</p>
+            <div class="perfil-stats">
+              <div class="perfil-stat"><span class="sv">156.5 kg</span><span class="sl">Total reciclado</span></div>
+              <div class="perfil-stat"><span class="sv">28</span><span class="sl">Visitas</span></div>
+            </div>
+          </div>
+          <div class="body-section">
+            <div class="impact-grid">
+              <div class="impact-card"><span class="i-icon">🌱</span><h3>234.8 kg</h3><p>CO₂ economizado</p></div>
+              <div class="impact-card"><span class="i-icon">🎗️</span><h3>12</h3><p>Árvores equiv.</p></div>
+            </div>
+            <div class="chart-card">
+              <div class="chart-card-head"><h2>Reciclagem mensal</h2><span>📈</span></div>
+              <div class="bars">
+                <div class="bar-wrap"><div class="bar-fill" style="height:46%"></div><span class="bar-label">Set</span></div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:62%"></div><span class="bar-label">Out</span></div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:70%"></div><span class="bar-label">Nov</span></div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:54%"></div><span class="bar-label">Dez</span></div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:78%"></div><span class="bar-label">Jan</span></div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:84%"></div><span class="bar-label">Fev</span></div>
+                <div class="bar-wrap"><div class="bar-fill" style="height:40%;background:linear-gradient(180deg,#22c55e,#16a34a)"></div><span class="bar-label" style="color:var(--green);font-weight:700">Mar</span></div>
+              </div>
+            </div>
+            <div class="panel-actions">
+              <button class="btn-primary"      onclick="goTo('coleta')">🗺️ &nbsp;Ver pontos de coleta</button>
+              <button class="btn-dark-outline" onclick="goTo('ranking')">🏆 &nbsp;Ranking</button>
+              <button class="btn-ghost"        onclick="goTo('login')">Sair</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /phone -->
+
+    <div class="screen-dots">
+      <div class="sdot active" id="dot-login"    onclick="goTo('login')"></div>
+      <div class="sdot"        id="dot-cadastro" onclick="goTo('cadastro')"></div>
+      <div class="sdot"        id="dot-home"     onclick="goTo('home')"></div>
+      <div class="sdot"        id="dot-coleta"   onclick="goTo('coleta')"></div>
+      <div class="sdot"        id="dot-ranking"  onclick="goTo('ranking')"></div>
+      <div class="sdot"        id="dot-painel"   onclick="goTo('painel')"></div>
+    </div>
+  </div><!-- /phone-wrap -->
+
+</div><!-- /main-layout -->
+
+<div class="palette">
+  <div class="palette-item"><div class="palette-dot" style="background:#0f9d58"></div> Verde principal #0f9d58</div>
+  <div class="palette-item"><div class="palette-dot" style="background:#0b8c4d"></div> Verde escuro #0b8c4d</div>
+  <div class="palette-item"><div class="palette-dot" style="background:#f6faf7;border:1px solid #555"></div> Fundo #f6faf7</div>
+  <div class="palette-item"><div class="palette-dot" style="background:#0b1f14"></div> Texto #0b1f14</div>
+  <div class="palette-item"><div class="palette-dot" style="background:#fff;border:1px solid #555"></div> Cards #ffffff</div>
+</div>
+
+<div class="transition-hint" id="hint"></div>
+
+<script>
+  const screens = ['login','cadastro','home','coleta','ranking','painel'];
+  const labels  = { login:'Login', cadastro:'Cadastro', home:'Home', coleta:'Coleta', ranking:'Ranking', painel:'Painel' };
+
+  function goTo(id) {
+    screens.forEach(s => {
+      document.getElementById('screen-' + s).classList.remove('active');
+      document.getElementById('dot-' + s).classList.remove('active');
+      document.getElementById('nav-' + s).classList.remove('active');
+    });
+    document.getElementById('screen-' + id).classList.add('active');
+    document.getElementById('dot-' + id).classList.add('active');
+    document.getElementById('nav-' + id).classList.add('active');
+
+    const sc = document.querySelector('#screen-' + id + ' .screen-content');
+    if (sc) sc.scrollTop = 0;
+
+    const hint = document.getElementById('hint');
+    hint.textContent = '→ ' + labels[id];
+    hint.classList.add('show');
+    clearTimeout(hint._t);
+    hint._t = setTimeout(() => hint.classList.remove('show'), 1200);
+  }
+</script>
+</body>
+</html>
